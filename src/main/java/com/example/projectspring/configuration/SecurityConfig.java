@@ -49,8 +49,9 @@ public class SecurityConfig {
             
             .authorizeHttpRequests(auth ->
             
-                auth.requestMatchers("/api/auth/**", "api/password/**", "/error","/api/auth/reset-password", "/api/messages/**").permitAll()
-                .anyRequest().authenticated()
+                auth.requestMatchers("/api/auth/**", "api/password/**", "/error","/api/auth/reset-password", "/api/messages/**",  "/api/roles/**", "api/trajets/**" , "api/trajets/passenger/**", "api/reservations/**","/api/users/**" ).permitAll()// Restriction pour les routes d'admin
+                        .requestMatchers("/api/admin/**").permitAll()
+                        .anyRequest().authenticated()
                 
                 )
             .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)

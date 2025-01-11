@@ -1,13 +1,8 @@
 package com.example.projectspring.repository;
 
-
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.example.projectspring.entity.Roles;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RolesRepository extends JpaRepository<Roles, Integer> {
 	Roles findRoleByName(String name);
 }
-
