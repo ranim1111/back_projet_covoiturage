@@ -136,6 +136,11 @@ public class AuthController {
             return ResponseEntity.status(response.isSuccess() ? 200 : 400).body(response);
         }
     }
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse> logout() {
+        ApiResponse response = authService.logout();
+        return ResponseEntity.ok(response);
+    }
 }
 
 /*

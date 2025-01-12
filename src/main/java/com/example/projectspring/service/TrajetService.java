@@ -4,9 +4,11 @@ import com.example.projectspring.entity.StatusTrajet;
 import com.example.projectspring.entity.Trajet;
 import com.example.projectspring.repository.TrajetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -47,27 +49,35 @@ public class TrajetService {
 
         if (existingTrajet.isPresent()) {
             Trajet updatedTrajet = existingTrajet.get();
-            // Mise à jour des informations de trajet
-            updatedTrajet.setDepart(trajet.getDepart());
-            updatedTrajet.setArrivee(trajet.getArrivee());
-            updatedTrajet.setHoraireDepart(trajet.getHoraireDepart());
-            updatedTrajet.setHoraireArrivee(trajet.getHoraireArrivee());
-            updatedTrajet.setConducteur(trajet.getConducteur());
-            updatedTrajet.setPassagers(trajet.getPassagers());
-            updatedTrajet.setDateCreation(trajet.getDateCreation());
-            updatedTrajet.setStatut(trajet.getStatut());
-            updatedTrajet.setDuree(trajet.getDuree());
-            updatedTrajet.setDistance(trajet.getDistance());
-            updatedTrajet.setTarif(trajet.getTarif());
-            updatedTrajet.setDescription(trajet.getDescription());
-            updatedTrajet.setHoraireArriveeEstimee(trajet.getHoraireArriveeEstimee());
 
-            // Enregistrer et retourner le trajet mis à jour
-            return Optional.of(trajetRepository.save(updatedTrajet));
+            // Updating only the non-null fields
+            if (trajet.getDepart() != null) updatedTrajet.setDepart(trajet.getDepart());
+            if (trajet.getArrivee() != null) updatedTrajet.setArrivee(trajet.getArrivee());
+            if (trajet.getHoraireDepart() != null) updatedTrajet.setHoraireDepart(trajet.getHoraireDepart());
+            if (trajet.getHoraireArrivee() != null) updatedTrajet.setHoraireArrivee(trajet.getHoraireArrivee());
+            if (trajet.getPassagers() != null) updatedTrajet.setPassagers(trajet.getPassagers()); 
+            if (trajet.getDateCreation() != null) updatedTrajet.setDateCreation(trajet.getDateCreation());
+            if (trajet.getStatut() != null) updatedTrajet.setStatut(trajet.getStatut());
+            if (trajet.getDistance() != null) updatedTrajet.setDistance(trajet.getDistance());
+            if (trajet.getTarif() != null) updatedTrajet.setTarif(trajet.getTarif());
+            if (trajet.getDescription() != null) updatedTrajet.setDescription(trajet.getDescription());
+            if (trajet.getHoraireArriveeEstimee() != null) updatedTrajet.setHoraireArriveeEstimee(trajet.getHoraireArriveeEstimee());
+
+            try {
+                // Save the updated trajet and return it
+                return Optional.of(trajetRepository.save(updatedTrajet));
+            } catch (Exception e) {
+                // Log the exception if save fails
+                System.err.println("Error while saving updated trajet: " + e.getMessage());
+                e.printStackTrace();
+                return Optional.empty();
+            }
         } else {
-            return Optional.empty(); // Si le trajet n'existe pas
+            System.out.println("Trajet not found with ID: " + id);
+            return Optional.empty(); // Trajet not found
         }
     }
+
 
     // Supprimer un trajet
     public boolean deleteTrajet(Integer id) {
@@ -77,15 +87,14 @@ public class TrajetService {
         }
         return false; // Trajet non trouvé pour suppression
     }
+
     public List<Trajet> getCancelledTrajets() {
         return trajetRepository.findByStatut(StatusTrajet.CANCELLED);
     }
+
 
     public List<Trajet> getTrajetsInProgress() {
         return trajetRepository.findByStatut(StatusTrajet.ACTIF);
     }
 
-    //public long getFutureTrajets() {
-        //return trajetRepository.countByDepartureDateAfter(LocalDateTime.now());
-    //}
 }

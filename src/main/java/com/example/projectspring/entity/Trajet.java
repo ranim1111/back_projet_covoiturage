@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,7 +17,7 @@ public class Trajet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-generation for primary key
-    private Integer id;
+    private Long id;
 
     // Départ du trajet
     @Column(nullable = false)
@@ -60,13 +60,10 @@ public class Trajet {
     }
 
     // Statut du trajet (actif, terminé, etc.)
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusTrajet statut;
+    private String statut;
 
     // Durée du trajet (en minutes ou autres unités)
-    @Column(nullable = false)
-    private Integer duree;
 
     // Distance du trajet (en kilomètres)
     @Column(nullable = false)
@@ -84,29 +81,19 @@ public class Trajet {
     @Column(nullable = false)
     private String horaireArriveeEstimee;
 
-    @Column(name = "date_depart")
-    private LocalDateTime dateDepart;
-
     // Méthode pour obtenir des détails sur le trajet
     public String getDetailsTrajet() {
         return "Trajet de " + depart + " à " + arrivee + " avec un tarif de " + tarif + "€.";
     }
+    @Column(name = "date_depart")
+    private LocalDate dateDepart;
 
-    // Méthode pour calculer la durée estimée en minutes, ou une autre logique personnalisée
-    public Integer calculerDureeEstimee() {
-        if (distance != null && distance > 0) {
-            // Exemple : vitesse moyenne de 60 km/h
-            int vitesseMoyenne = 60;
-            return (int) (distance / vitesseMoyenne * 60); // Durée estimée en minutes
-        }
-        return duree != null ? duree : 0;
+    public LocalDate getDateDepart() {
+        return dateDepart;
     }
 
-    public StatusTrajet getStatut() {
-        return statut;
+    public void setDateDepart(LocalDate dateDepart) {
+        this.dateDepart = dateDepart;
     }
 
-    public void setStatut(StatusTrajet statut) {
-        this.statut = statut;
-    }
 }

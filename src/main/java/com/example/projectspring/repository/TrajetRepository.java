@@ -4,6 +4,7 @@ import com.example.projectspring.entity.StatusTrajet;
 import com.example.projectspring.entity.Trajet;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,9 +16,11 @@ public interface TrajetRepository extends JpaRepository<Trajet, Integer> {
     // Utilisez le nom de la propriété correcte 'dateDepart'
     long countByDateDepartAfter(LocalDateTime dateDepart);
 
-    // Corrected method to count by statut (not status)
+
     List<Trajet> findByStatut(StatusTrajet statut);
-    long countByStatut(StatusTrajet statut);  // Corrected method to count by statut
+    long countByStatut(StatusTrajet statut);
+    List<Trajet> findByDateDepart(LocalDate dateDepart);
+
 }
 
 

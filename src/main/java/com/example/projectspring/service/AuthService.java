@@ -23,7 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -252,6 +252,18 @@ public class AuthService {
         // Return the user
         return userFromDb;
     }
+    public ApiResponse logout() {
+        try {
+            
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                SecurityContextHolder.clearContext(); // This clears the session
+            }
 
+            return new ApiResponse(true, "Logout successful", null, null);
+        } catch (Exception e) {
+            return new ApiResponse(false, "An error occurred during logout", null, null);
+        }
+    }
 
 }

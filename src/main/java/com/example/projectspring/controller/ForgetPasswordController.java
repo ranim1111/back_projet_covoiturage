@@ -53,7 +53,7 @@ public class ForgetPasswordController {
 	        resetTimestampTokens.put(resetToken, System.currentTimeMillis());
 
 	        // Send the token to the user's email
-	        String resetLink = "http://localhost:8081/api/auth/reset-password?token=" + resetToken;
+	        String resetLink = "http://localhost:4200/resetpassword-page?token=" + resetToken;
 	        String subject = "Password Reset Request";
 	        String body = "To reset your password, click the link below:\n" + resetLink;
 	        emailService.sendMail(email, subject, body);
