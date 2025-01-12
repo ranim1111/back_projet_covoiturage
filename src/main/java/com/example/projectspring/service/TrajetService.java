@@ -1,10 +1,12 @@
 package com.example.projectspring.service;
 
+import com.example.projectspring.entity.StatusTrajet;
 import com.example.projectspring.entity.Trajet;
 import com.example.projectspring.repository.TrajetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,8 +53,8 @@ public class TrajetService {
             updatedTrajet.setHoraireDepart(trajet.getHoraireDepart());
             updatedTrajet.setHoraireArrivee(trajet.getHoraireArrivee());
             updatedTrajet.setConducteur(trajet.getConducteur());
-            updatedTrajet.setPassagers(trajet.getPassagers()); // Correction du nom de méthode pour la liste des passagers
-            updatedTrajet.setDateCreation(trajet.getDateCreation()); // Si vous voulez mettre à jour la date de création (attention, elle pourrait être générée automatiquement)
+            updatedTrajet.setPassagers(trajet.getPassagers());
+            updatedTrajet.setDateCreation(trajet.getDateCreation());
             updatedTrajet.setStatut(trajet.getStatut());
             updatedTrajet.setDuree(trajet.getDuree());
             updatedTrajet.setDistance(trajet.getDistance());
@@ -75,4 +77,15 @@ public class TrajetService {
         }
         return false; // Trajet non trouvé pour suppression
     }
+    public List<Trajet> getCancelledTrajets() {
+        return trajetRepository.findByStatut(StatusTrajet.CANCELLED);
+    }
+
+    public List<Trajet> getTrajetsInProgress() {
+        return trajetRepository.findByStatut(StatusTrajet.ACTIF);
+    }
+
+    //public long getFutureTrajets() {
+        //return trajetRepository.countByDepartureDateAfter(LocalDateTime.now());
+    //}
 }

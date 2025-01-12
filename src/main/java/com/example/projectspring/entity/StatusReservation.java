@@ -6,5 +6,6 @@ package com.example.projectspring.entity;
 public enum StatusReservation {
     PENDING,   // En attente
     ACCEPTED,  // Acceptée
-    CONFIRMED, REFUSED    // Refusée
+    CONFIRMED, // Confirmée
+    REFUSED    // Refusée
 }

@@ -18,12 +18,21 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard-stats")
-    public Map<String, Long> getDashboardStats() {
-        Map<String, Long> stats = new HashMap<>();
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
         stats.put("totalUsers", adminService.getTotalUsers());
         stats.put("totalTrajets", adminService.getTotalTrajets());
         stats.put("totalReservations", adminService.getTotalReservations());
         stats.put("confirmedReservations", adminService.getConfirmedReservations());
+        stats.put("cancelledTrajets", adminService.getCancelledTrajets());
+        stats.put("trajectsInProgress", adminService.getTrajetsInProgress());
+        stats.put("futureTrajets", adminService.getFutureTrajets());
+        stats.put("cancelledReservations", adminService.getCancelledReservations());
+        stats.put("pendingReservations", adminService.getPendingReservations());
+        stats.put("usersWithInappropriateBehavior", adminService.getUsersWithInappropriateBehavior());
+        stats.put("averageReservationsPerTrajet", adminService.getAverageReservationsPerTrajet());
+        stats.put("averageReservationsPerPassager", adminService.getAverageReservationsPerPassager());
+        //stats.put("usersByVille", adminService.getUsersByVille());
         return stats;
     }
 }

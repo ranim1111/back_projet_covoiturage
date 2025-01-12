@@ -85,4 +85,33 @@ public class TrajetController {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/cancelled")
+    public ResponseEntity<List<Trajet>> getCancelledTrajets() {
+        List<Trajet> cancelledTrajets = trajetService.getCancelledTrajets();
+        if (cancelledTrajets.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(cancelledTrajets);
+    }
+
+    // Récupérer les trajets en cours
+    @GetMapping("/in-progress")
+    public ResponseEntity<List<Trajet>> getTrajetsInProgress() {
+        List<Trajet> inProgressTrajets = trajetService.getTrajetsInProgress();
+        if (inProgressTrajets.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(inProgressTrajets);
+    }
+
+    // Récupérer les trajets futurs
+    //@GetMapping("/future")
+    //public ResponseEntity<List<Trajet>> getFutureTrajets() {
+        //List<Trajet> futureTrajets = trajetService.getFutureTrajets();
+        //if (futureTrajets.isEmpty()) {
+            //return ResponseEntity.noContent().build();
+        //}
+        ///return ResponseEntity.ok(futureTrajets);
+    //}
 }

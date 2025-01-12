@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,7 @@ public class Trajet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-generation for primary key
-    private Long id;
+    private Integer id;
 
     // Départ du trajet
     @Column(nullable = false)
@@ -59,8 +60,9 @@ public class Trajet {
     }
 
     // Statut du trajet (actif, terminé, etc.)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String statut;
+    private StatusTrajet statut;
 
     // Durée du trajet (en minutes ou autres unités)
     @Column(nullable = false)
@@ -82,6 +84,9 @@ public class Trajet {
     @Column(nullable = false)
     private String horaireArriveeEstimee;
 
+    @Column(name = "date_depart")
+    private LocalDateTime dateDepart;
+
     // Méthode pour obtenir des détails sur le trajet
     public String getDetailsTrajet() {
         return "Trajet de " + depart + " à " + arrivee + " avec un tarif de " + tarif + "€.";
@@ -95,5 +100,13 @@ public class Trajet {
             return (int) (distance / vitesseMoyenne * 60); // Durée estimée en minutes
         }
         return duree != null ? duree : 0;
+    }
+
+    public StatusTrajet getStatut() {
+        return statut;
+    }
+
+    public void setStatut(StatusTrajet statut) {
+        this.statut = statut;
     }
 }

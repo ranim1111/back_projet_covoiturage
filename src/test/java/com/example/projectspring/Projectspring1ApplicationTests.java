@@ -8,6 +8,6 @@ class Projectspring1ApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// This ensures the context loads properly
 	}
-
 }

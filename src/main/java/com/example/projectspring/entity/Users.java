@@ -30,20 +30,20 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
+
     private Long id;
     @NotBlank(message = "First name is mandatory")
     @Size(min = 3, message = "First name must be more than 3 characters")
     private String firstName;
-    
+
     @NotBlank(message = "First name is mandatory")
     @Size(min = 3, message = "First name must be more than 3 characters")
     private String lastName;
-    
+
     @NotBlank(message = "Email is mandatory")
     @Email(message= "A valid email is required")
     private String email;
-    
+
     @NotBlank(message = "Phone Number is mandatory")
     @Pattern(regexp = "^[0-9]{8}$", message = "Phone number must be an 8 digit number")
     @Column(unique= true)
@@ -60,8 +60,10 @@ public class Users {
     @JoinColumn(name = "role_id")
     private Roles role;
     @NotBlank(message = "NaturePersonne is mandatory")
-    private String NaturePersonne; 
-    
+    private String NaturePersonne;
+    private Boolean behaviorReported;
+
+
 
 
 }
