@@ -1,10 +1,12 @@
 package com.example.projectspring.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,7 +47,8 @@ public class Trajet {
             name = "trajet_passagers",
             joinColumns = @JoinColumn(name = "trajet_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<Users> passagers; // Liste des passagers
+    @Size(max = 4, message = "Le nombre maximum de passagers est 4")
+    private List<Users> passagers= new ArrayList<>(); 
 
     // Date de création du trajet (Utiliser la méthode @PrePersist pour automatiser la génération de la date)
     @Column(nullable = false, updatable = false)
@@ -60,11 +63,8 @@ public class Trajet {
 
     // Statut du trajet (actif, terminé, etc.)
     @Column(nullable = false)
-    private String statut;
+    private String statut= "Actif";
 
-    // Durée du trajet (en minutes ou autres unités)
-    @Column(nullable = false)
-    private Integer duree;
 
     // Distance du trajet (en kilomètres)
     @Column(nullable = false)
@@ -87,13 +87,5 @@ public class Trajet {
         return "Trajet de " + depart + " à " + arrivee + " avec un tarif de " + tarif + "€.";
     }
 
-    // Méthode pour calculer la durée estimée en minutes, ou une autre logique personnalisée
-    public Integer calculerDureeEstimee() {
-        if (distance != null && distance > 0) {
-            // Exemple : vitesse moyenne de 60 km/h
-            int vitesseMoyenne = 60;
-            return (int) (distance / vitesseMoyenne * 60); // Durée estimée en minutes
-        }
-        return duree != null ? duree : 0;
-    }
+
 }

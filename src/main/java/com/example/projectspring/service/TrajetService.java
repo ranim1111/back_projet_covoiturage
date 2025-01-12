@@ -45,27 +45,35 @@ public class TrajetService {
 
         if (existingTrajet.isPresent()) {
             Trajet updatedTrajet = existingTrajet.get();
-            // Mise à jour des informations de trajet
-            updatedTrajet.setDepart(trajet.getDepart());
-            updatedTrajet.setArrivee(trajet.getArrivee());
-            updatedTrajet.setHoraireDepart(trajet.getHoraireDepart());
-            updatedTrajet.setHoraireArrivee(trajet.getHoraireArrivee());
-            updatedTrajet.setConducteur(trajet.getConducteur());
-            updatedTrajet.setPassagers(trajet.getPassagers()); // Correction du nom de méthode pour la liste des passagers
-            updatedTrajet.setDateCreation(trajet.getDateCreation()); // Si vous voulez mettre à jour la date de création (attention, elle pourrait être générée automatiquement)
-            updatedTrajet.setStatut(trajet.getStatut());
-            updatedTrajet.setDuree(trajet.getDuree());
-            updatedTrajet.setDistance(trajet.getDistance());
-            updatedTrajet.setTarif(trajet.getTarif());
-            updatedTrajet.setDescription(trajet.getDescription());
-            updatedTrajet.setHoraireArriveeEstimee(trajet.getHoraireArriveeEstimee());
 
-            // Enregistrer et retourner le trajet mis à jour
-            return Optional.of(trajetRepository.save(updatedTrajet));
+            // Updating only the non-null fields
+            if (trajet.getDepart() != null) updatedTrajet.setDepart(trajet.getDepart());
+            if (trajet.getArrivee() != null) updatedTrajet.setArrivee(trajet.getArrivee());
+            if (trajet.getHoraireDepart() != null) updatedTrajet.setHoraireDepart(trajet.getHoraireDepart());
+            if (trajet.getHoraireArrivee() != null) updatedTrajet.setHoraireArrivee(trajet.getHoraireArrivee());
+            if (trajet.getPassagers() != null) updatedTrajet.setPassagers(trajet.getPassagers()); 
+            if (trajet.getDateCreation() != null) updatedTrajet.setDateCreation(trajet.getDateCreation());
+            if (trajet.getStatut() != null) updatedTrajet.setStatut(trajet.getStatut());
+            if (trajet.getDistance() != null) updatedTrajet.setDistance(trajet.getDistance());
+            if (trajet.getTarif() != null) updatedTrajet.setTarif(trajet.getTarif());
+            if (trajet.getDescription() != null) updatedTrajet.setDescription(trajet.getDescription());
+            if (trajet.getHoraireArriveeEstimee() != null) updatedTrajet.setHoraireArriveeEstimee(trajet.getHoraireArriveeEstimee());
+
+            try {
+                // Save the updated trajet and return it
+                return Optional.of(trajetRepository.save(updatedTrajet));
+            } catch (Exception e) {
+                // Log the exception if save fails
+                System.err.println("Error while saving updated trajet: " + e.getMessage());
+                e.printStackTrace();
+                return Optional.empty();
+            }
         } else {
-            return Optional.empty(); // Si le trajet n'existe pas
+            System.out.println("Trajet not found with ID: " + id);
+            return Optional.empty(); // Trajet not found
         }
     }
+
 
     // Supprimer un trajet
     public boolean deleteTrajet(Integer id) {
