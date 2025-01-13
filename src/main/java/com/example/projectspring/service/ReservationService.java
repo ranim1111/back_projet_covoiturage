@@ -9,6 +9,7 @@ import com.example.projectspring.repository.ReservationRepository;
 import com.example.projectspring.repository.TrajetRepository;
 import com.example.projectspring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class ReservationService {
     private UserRepository utilisateurRepository;
 
     public Reservation createReservation(Long trajetId, Long passagerId) {
-        Optional<Trajet> trajet = trajetRepository.findById(Math.toIntExact(trajetId));
+        Optional<Trajet> trajet = trajetRepository.findById((long) Math.toIntExact(trajetId));
         Optional<Users> passager = utilisateurRepository.findById(passagerId);
 
         if (trajet.isEmpty() || passager.isEmpty()) {

@@ -1,11 +1,12 @@
 package com.example.projectspring.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -46,7 +47,8 @@ public class Trajet {
             name = "trajet_passagers",
             joinColumns = @JoinColumn(name = "trajet_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<Users> passagers; // Liste des passagers
+    @Size(max = 4, message = "Le nombre maximum de passagers est 4")
+    private List<Users> passagers= new ArrayList<>();
 
     // Date de création du trajet (Utiliser la méthode @PrePersist pour automatiser la génération de la date)
     @Column(nullable = false, updatable = false)
@@ -61,9 +63,8 @@ public class Trajet {
 
     // Statut du trajet (actif, terminé, etc.)
     @Column(nullable = false)
-    private String statut;
+    private String statut= "Actif";
 
-    // Durée du trajet (en minutes ou autres unités)
 
     // Distance du trajet (en kilomètres)
     @Column(nullable = false)
@@ -85,15 +86,6 @@ public class Trajet {
     public String getDetailsTrajet() {
         return "Trajet de " + depart + " à " + arrivee + " avec un tarif de " + tarif + "€.";
     }
-    @Column(name = "date_depart")
-    private LocalDate dateDepart;
 
-    public LocalDate getDateDepart() {
-        return dateDepart;
-    }
-
-    public void setDateDepart(LocalDate dateDepart) {
-        this.dateDepart = dateDepart;
-    }
 
 }

@@ -1,13 +1,9 @@
 package com.example.projectspring.service;
 
-import com.example.projectspring.entity.StatusTrajet;
 import com.example.projectspring.entity.Trajet;
 import com.example.projectspring.repository.TrajetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import java.time.LocalDateTime;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +26,7 @@ public class TrajetService {
 
     // Récupérer un trajet par son ID
     public Optional<Trajet> getTrajetById(Integer id) {
-        return trajetRepository.findById(id);
+        return trajetRepository.findById(Long.valueOf(id));
     }
 
     // Récupérer les trajets d'un conducteur
@@ -45,7 +41,7 @@ public class TrajetService {
 
     // Mettre à jour un trajet
     public Optional<Trajet> updateTrajet(Integer id, Trajet trajet) {
-        Optional<Trajet> existingTrajet = trajetRepository.findById(id);
+        Optional<Trajet> existingTrajet = trajetRepository.findById(Long.valueOf(id));
 
         if (existingTrajet.isPresent()) {
             Trajet updatedTrajet = existingTrajet.get();
@@ -55,7 +51,7 @@ public class TrajetService {
             if (trajet.getArrivee() != null) updatedTrajet.setArrivee(trajet.getArrivee());
             if (trajet.getHoraireDepart() != null) updatedTrajet.setHoraireDepart(trajet.getHoraireDepart());
             if (trajet.getHoraireArrivee() != null) updatedTrajet.setHoraireArrivee(trajet.getHoraireArrivee());
-            if (trajet.getPassagers() != null) updatedTrajet.setPassagers(trajet.getPassagers()); 
+            if (trajet.getPassagers() != null) updatedTrajet.setPassagers(trajet.getPassagers());
             if (trajet.getDateCreation() != null) updatedTrajet.setDateCreation(trajet.getDateCreation());
             if (trajet.getStatut() != null) updatedTrajet.setStatut(trajet.getStatut());
             if (trajet.getDistance() != null) updatedTrajet.setDistance(trajet.getDistance());
@@ -81,20 +77,10 @@ public class TrajetService {
 
     // Supprimer un trajet
     public boolean deleteTrajet(Integer id) {
-        if (trajetRepository.existsById(id)) {
-            trajetRepository.deleteById(id);
+        if (trajetRepository.existsById(Long.valueOf(id))) {
+            trajetRepository.deleteById(Long.valueOf(id));
             return true; // Suppression réussie
         }
         return false; // Trajet non trouvé pour suppression
     }
-
-    public List<Trajet> getCancelledTrajets() {
-        return trajetRepository.findByStatut(StatusTrajet.CANCELLED);
-    }
-
-
-    public List<Trajet> getTrajetsInProgress() {
-        return trajetRepository.findByStatut(StatusTrajet.ACTIF);
-    }
-
 }

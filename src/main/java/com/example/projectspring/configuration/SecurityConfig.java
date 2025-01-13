@@ -45,19 +45,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            
-            .authorizeHttpRequests(auth ->
-            
-                auth.requestMatchers("/api/auth/**", "api/password/**", "/error","/api/auth/reset-password", "/api/messages/**",  "/api/roles/**", "api/trajets/**" , "api/trajets/passenger/**", "api/reservations/**","/api/users/**" ,"/ws/**").permitAll()// Restriction pour les routes d'admin
-                        .requestMatchers("/api/admin/**").permitAll()
-                        .anyRequest().authenticated()
-                
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .authorizeHttpRequests(auth ->
+
+                        auth.requestMatchers("/api/auth/**", "api/password/**", "/error","/api/auth/reset-password", "/api/messages/**",  "/api/roles/**", "api/trajets/**" , "api/trajets/passenger/**", "api/reservations/**","/api/users/**" ,"/ws/**").permitAll()// Restriction pour les routes d'admin
+                                .requestMatchers("/api/admin/**").permitAll()
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+
                 )
-            .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
-        .securityContext(securityContext -> securityContext.requireExplicitSave(false))
-        .httpBasic(Customizer.withDefaults());
-        
+                .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .securityContext(securityContext -> securityContext.requireExplicitSave(false))
+                .httpBasic(Customizer.withDefaults());
+
         return http.build();
     }
 

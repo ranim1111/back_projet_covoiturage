@@ -29,41 +29,43 @@ import jakarta.validation.constraints.Email;
 public class Users {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Primary key should be auto-generated
+    private Long id; // Primary key
 
-    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "role_id")  // Role relationship
+    private Roles role; // Role is a related entity but not the primary key
+
     @NotBlank(message = "First name is mandatory")
     @Size(min = 3, message = "First name must be more than 3 characters")
     private String firstName;
 
-    @NotBlank(message = "First name is mandatory")
-    @Size(min = 3, message = "First name must be more than 3 characters")
+    @NotBlank(message = "Last name is mandatory")
+    @Size(min = 3, message = "Last name must be more than 3 characters")
     private String lastName;
 
     @NotBlank(message = "Email is mandatory")
-    @Email(message= "A valid email is required")
+    @Email(message = "A valid email is required")
     private String email;
 
     @NotBlank(message = "Phone Number is mandatory")
     @Pattern(regexp = "^[0-9]{8}$", message = "Phone number must be an 8 digit number")
-    @Column(unique= true)
+    @Column(unique = true)
     private String phoneNumber;
+
     @NotBlank(message = "Username is mandatory")
-    @Size(min = 3, message = "First name must be more than 3 characters")
+    @Size(min = 3, message = "Username must be more than 3 characters")
     private String username;
+
     @NotBlank(message = "Password is mandatory")
     @Size(min = 5, message = "Password must be more than 5 characters")
     @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one number")
     private String password;
+
     private String ville;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Roles role;
+
     @NotBlank(message = "NaturePersonne is mandatory")
     private String NaturePersonne;
+
     private Boolean behaviorReported;
-
-
-
-
 }

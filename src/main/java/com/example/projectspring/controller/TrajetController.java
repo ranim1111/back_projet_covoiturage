@@ -23,10 +23,10 @@ public class TrajetController {
     @Autowired
     private TrajetService trajetService;
     @Autowired
-    private AuthService authService; 
+    private AuthService authService;
 
     @PostMapping("/{conducteurId}")
-    @PreAuthorize("hasRole('ROLE_CONDUCTEUR')")  
+    @PreAuthorize("hasRole('ROLE_CONDUCTEUR')")
     public ResponseEntity<Trajet> ajouterTrajet(
             @PathVariable Long conducteurId,
             @RequestBody Trajet trajet,
@@ -34,35 +34,35 @@ public class TrajetController {
             Authentication authentication
     ) {
         try {
-         
+
             if (authentication == null || !authentication.isAuthenticated()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
 
-            String jwtToken = token.substring(7);  
-            
+            String jwtToken = token.substring(7);
 
-            Users user = authService.getUserFromToken(jwtToken); 
-            
+
+            Users user = authService.getUserFromToken(jwtToken);
+
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
-            
-           
+
+
             if (!user.getId().equals(conducteurId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // Forbidden si les IDs ne correspondent pas
             }
 
-            
+
             Users conducteur = new Users();
-            conducteur.setId(conducteurId);  
+            conducteur.setId(conducteurId);
             trajet.setConducteur(conducteur);
 
-            
+
             Trajet savedTrajet = trajetService.ajouterTrajet(trajet);
 
-           
+
             return ResponseEntity.status(HttpStatus.CREATED).body(savedTrajet);
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,10 +83,10 @@ public class TrajetController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            String jwtToken = token.substring(7);  
+            String jwtToken = token.substring(7);
 
-            Users user = authService.getUserFromToken(jwtToken);  
-            
+            Users user = authService.getUserFromToken(jwtToken);
+
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -125,7 +125,7 @@ public class TrajetController {
 
             Trajet trajet = trajetService.getTrajetById(id)
                     .orElseThrow(() -> new TrajetNotFoundException("Trajet non trouvé avec l'ID: " + id));
-            
+
             return ResponseEntity.ok(trajet);
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,7 +236,7 @@ public class TrajetController {
             System.out.println("ID de l'utilisateur authentifié : " + user.getId());
             System.out.println("ID du conducteur dans l'URL : " + conducteurId);
 
-   
+
 
             if (trajet == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -281,44 +281,44 @@ public class TrajetController {
                         .body(Collections.singletonMap("message", "Token d'authentification invalide"));
             }
 
-            
+
             String jwtToken = token.substring(7);
 
-            
+
             Users user = authService.getUserFromToken(jwtToken);
 
-            
+
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Collections.singletonMap("message", "Token d'authentification invalide"));
             }
 
-           
+
             Optional<Trajet> trajetOptional = trajetService.getTrajetById(id);
 
-            
+
             if (!trajetOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Collections.singletonMap("message", "Trajet non trouvé avec l'ID: " + id));
             }
 
-          
+
             Trajet trajet = trajetOptional.get();
             if (!trajet.getConducteur().getId().equals(user.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(Collections.singletonMap("message", "Accès interdit : Vous n'êtes pas le conducteur de ce trajet"));
             }
 
-        
+
             boolean deleted = trajetService.deleteTrajet(id);
 
- 
+
             if (!deleted) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Collections.singletonMap("message", "Trajet non trouvé avec l'ID: " + id));
             }
 
-     
+
             return ResponseEntity.noContent().build();
 
         } catch (Exception e) {
@@ -327,36 +327,5 @@ public class TrajetController {
                     .body(Collections.singletonMap("message", "Erreur interne du serveur"));
         }
     }
-    @GetMapping("/cancelled")
-    public ResponseEntity<List<Trajet>> getCancelledTrajets() {
-        List<Trajet> cancelledTrajets = trajetService.getCancelledTrajets();
-        if (cancelledTrajets.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(cancelledTrajets);
-    }
-
-
-    // Récupérer les trajets en cours
-    @GetMapping("/in-progress")
-    public ResponseEntity<List<Trajet>> getTrajetsInProgress() {
-        List<Trajet> inProgressTrajets = trajetService.getTrajetsInProgress();
-        if (inProgressTrajets.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(inProgressTrajets);
-    }
-
-
-// Récupérer les trajets futurs
-//@GetMapping("/future")
-//public ResponseEntity<List<Trajet>> getFutureTrajets() {
-    //List<Trajet> futureTrajets = trajetService.getFutureTrajets();
-    //if (futureTrajets.isEmpty()) {
-    //return ResponseEntity.noContent().build();
-    //}
-    ///return ResponseEntity.ok(futureTrajets);
-//}
-
 
 }

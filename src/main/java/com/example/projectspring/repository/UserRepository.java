@@ -3,14 +3,14 @@ package com.example.projectspring.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.List;
 import java.util.Optional;
 
 
 import com.example.projectspring.entity.Users;
+import org.springframework.stereotype.Repository;
 
 
-
+@Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
     Users findByUsername(String username);
     Users findByEmail(String email);
@@ -18,9 +18,5 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     Optional<Users> findById(Long id);
     long countByRoleName(String roleName);
     long countByBehaviorReported(Boolean behaviorReported);
-
-
-    //List<String> findAllVilles();
-
-    //Long countByVille(String ville);
 }
+
